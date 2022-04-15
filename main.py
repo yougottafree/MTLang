@@ -52,7 +52,10 @@ def validReal(real):
     splitted = real.split(".")
     if len(splitted) != 2:
         return False
-    return validInteger(splitted[0]) and validInteger(splitted[1])
+    for char in splitted[1]:
+        if not char.isdigit():
+            return False
+    return validInteger(splitted[0])
 
 def validVariable(var):
     for char in var:
@@ -65,23 +68,49 @@ def validStringAssignment(rightSide, nameSpace):
         return True
     if not validVariable(rightSide):
         raise MTLSyntaxError(rightSide, "is not a valid variable")
+        return False
     if rightSide not in nameSpace:
         raise MTLVariableNotInitialized(rightSide)
+        return False
     if nameSpace[rightSide] != Type.String or nameSpace[rightSide] != Type.ConstantString:
         raise MTLSyntaxError(rightSide, "is not String")
+        return False
     return True
         
 def validIntegerAssignment(rightSide, nameSpace):
     if isValidInteger(rightSide):
         return True
-    normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+")
+    normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").repalce(")", "")
     allElement = normalizeOp.split("+")
     for element in allElement:
-        error = False
-        if not validInteger(element):
-            error = True
-            break
-        if element
+        element = element.strip()
+        if isValidInteger(element):
+            continue
+        elif element not in nameSpace:
+            raise MTLVariableNotInitialized(element)
+            return False
+        elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger:
+            raise MTLSyntaxError(element, "is not an integer")
+            return False
+    return True
+
+def validRealAssignment(rightSide, nameSpace):
+    if isValidInteger(rightSide):
+        return True
+    normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").repalce(")", "")
+    allElement = normalizeOp.split("+")
+    for element in allElement:
+        element = element.strip()
+        if isValidInteger(element):
+            continue
+        elif element not in nameSpace:
+            raise MTLVariableNotInitialized(element)
+            return False
+        elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger \
+        and nameSpace[element] != Type.Real and nameSpace[element] != Type.ConstantReal:
+            raise MTLSyntaxError(element, "is not a real number")
+            return False
+    return True
 
 def handleAssignment(line, tabCount):
     lineSplited = line.split("->", 1)
