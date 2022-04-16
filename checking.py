@@ -96,7 +96,7 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
         if printToErr:
             print_error(f"{rightSide} has unvalid parentheses")
         return False
-    if validInteger(rightSide):
+    if validIntegerAssignment(rightSide, nameSpace):
         return True
     if validReal(rightSide):
         return True

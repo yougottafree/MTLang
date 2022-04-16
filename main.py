@@ -13,7 +13,7 @@
 
 import sys
 from checking import * 
-from errors import MTLSyntaxError, MTLVariableNotInitialized, MTLRuntimeError
+from errors import MTLSyntaxError, MTLRuntimeError
 
 def main():
     if len(sys.argv) < 2:
@@ -22,7 +22,13 @@ def main():
     file = open(fileName, 'r')
     fileLines = file.readlines()
     file.close()
-    readFile(fileLines)
+    nameSpace = {}
+    addCommandLineArgument(nameSpace)
+    readFile(fileLines, nameSpace)
+
+def addCommandLineArgument(nameSpace):
+    for assignment in sys.argv[2:]:
+        handleAssignment(assignment, nameSpace, 0)
 
 def assignVariableInteger(line, nameSpace, tabCount, constant=False):
     """
@@ -31,7 +37,7 @@ def assignVariableInteger(line, nameSpace, tabCount, constant=False):
     """
     lineSplit = line.split("->", 1)
     if len(lineSplit) != 2:
-        raise MTLSyntaxError(line, "wrong assignment syntax")
+        raise MTLSyntaxError(line, "wrong assignment syntax, , did you use '=' instead of '->'?")
     firstPart = lineSplit[0].split()
     if len(firstPart) != 2:
         raise MTLSyntaxError(line, "wrong assignment syntax")
@@ -57,7 +63,7 @@ def assignVariableReal(line, nameSpace, tabCount, constant=False):
     """
     lineSplit = line.split("->", 1)
     if len(lineSplit) != 2:
-        raise MTLSyntaxError(line, "wrong assignment syntax")
+        raise MTLSyntaxError(line, "wrong assignment syntax, , did you use '=' instead of '->'?")
     firstPart = lineSplit[0].split()
     if len(firstPart) != 2:
         raise MTLSyntaxError(line, "wrong assignment syntax")
@@ -79,7 +85,7 @@ def assignVariableReal(line, nameSpace, tabCount, constant=False):
 def assignVariableString(line, nameSpace, tabCount, constant=False):
     lineSplit = line.split("->", 1)
     if len(lineSplit) != 2:
-        raise MTLSyntaxError(line, "wrong assignment syntax")
+        raise MTLSyntaxError(line, "wrong assignment syntax, did you use '=' instead of '->'?")
     firstPart = lineSplit[0].split()
     if len(firstPart) != 2:
         raise MTLSyntaxError(line, "wrong assignment syntax")
@@ -101,7 +107,7 @@ def assignVariableString(line, nameSpace, tabCount, constant=False):
 def assignVariableBool(line, nameSpace, tabCount):
     lineSplit = line.split("->", 1)
     if len(lineSplit) != 2:
-        raise MTLSyntaxError(line, "wrong assignment syntax")
+        raise MTLSyntaxError(line, "wrong assignment syntax, did you use '=' instead of '->'?")
     firstPart = lineSplit[0].split()
     if len(firstPart) != 2:
         raise MTLSyntaxError(line, "wrong assignment syntax")
@@ -124,7 +130,7 @@ def handleWhile(line, nameSpace, tabCount):
         raise MTLSyntaxError(line, "wrong while syntax")
     condition = line[5:len(line)-3].strip()
     if not validBooleanAssignment(condition, nameSpace):
-        raise MTLSyntaxError(line, "condition is not valid boolean expression")
+        raise MTLSyntaxError(line, f"{condition} is not valid boolean expression")
     condition = condition.replace("!", " not ").replace("&", " and ").replace("|", " or ").replace("~", "-").replace("^", "**").replace("TRUE", "True").replace("FALSE", "False")
     tabs = '\t' * tabCount
     print(f"{tabs}while {condition}:")
@@ -150,11 +156,26 @@ def handleElse(line, nameSpace, tabCount):
 
 def handlePrint(line, tabCount):
     tabs = '\t'*tabCount
-    print(f"{tabs}print({line[4:len(line)-1]})")
+    print(f"{tabs}print({line[4:len(line)-1]}, end=\"\")")
 
-def readFile(file):
+def handleAssignment(line, nameSpace, tabCount):
+    if line[:7] == "var_int":
+        assignVariableInteger(line, nameSpace, tabCount)
+    elif line[:8] == "var_real":
+        assignVariableReal(line, nameSpace, tabCount)
+    elif line[:7] == "var_str":
+        assignVariableString(line, nameSpace, tabCount)
+    elif line[:9] == "const_int":
+        assignVariableInteger(line, nameSpace, tabCount, constant=True)
+    elif line[:10] == "const_real":
+        assignVariableReal(line, nameSpace, tabCount, constant=True)
+    elif line[:8] == "var_bool":
+        assignVariableBool(line, nameSpace, tabCount)
+    else:
+        raise MTLSyntaxError(line, "cannot find that assignment syntax")
+
+def readFile(file, nameSpace):
     indentStack = []
-    nameSpace = {}
     for i in range(len(file)):
         line = file[i].strip()
         if not line:
@@ -175,18 +196,8 @@ def readFile(file):
             if len(indentStack) == 0:
                 raise MTLRuntimeError("No if or while block to end")
             indentStack.pop()
-        elif line[:7] == "var_int":
-            assignVariableInteger(line, nameSpace, len(indentStack))
-        elif line[:8] == "var_real":
-            assignVariableReal(line, nameSpace, len(indentStack))
-        elif line[:7] == "var_str":
-            assignVariableString(line, nameSpace, len(indentStack))
-        elif line[:9] == "const_int":
-            assignVariableInteger(line, nameSpace, len(indentStack), constant=True)
-        elif line[:10] == "const_real":
-            assignVariableReal(line, nameSpace, len(indentStack), constant=True)
-        elif line[:8] == "var_bool":
-            assignVariableBool(line, nameSpace, len(indentStack))
+        elif line[:3] == "var":
+            handleAssignment(line, nameSpace, len(indentStack))
         elif line[:3] == "out":
             handlePrint(line, len(indentStack))
         else:

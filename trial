@@ -1,3 +1,28 @@
+var_int i -> a
 
-var_int x -> 0
-out<x>
+while i <= b do
+    var_int secondI -> 0
+    while secondI < i do
+        out<"*">
+        var_int secondI -> secondI + 1
+    end
+    out<"\n">
+    var_int i -> i + 1
+end
+
+var_int i -> 1
+var_int sum -> 0
+
+while a * i < m  do
+    var_int sum -> sum + a * i
+    var_int i -> i + 1
+end
+
+var_int i -> 1
+while b * i < m do 
+    var_int sum -> sum + b * i
+    var_int i -> i + 1
+end
+
+out<sum>
+out<"\n">
