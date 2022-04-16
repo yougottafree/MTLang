@@ -1,0 +1,18 @@
+$ this is an invalid assignment because it did not follow var_int, var_real
+var a -> 6
+
+$ this is an invalid assignment because it did not use ->, but use =
+var_int a = 6
+
+$ this is an invalid assignmet because a1 is not a valid variable name, variable name can only hold character
+var_int a1 -> 5
+
+$ this is an invalid assignment because b is not initialized yet
+var_real bS -> b
+
+$ this is an invalid assignment because d is not a str
+var_int d -> 10
+var_str g -> d
+
+$ this is an invalid assignment because it is of differnt type
+var_int u -> TRUE

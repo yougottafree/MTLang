@@ -1,6 +1,9 @@
+"""
+    This file is for testing the funtion, you can ignore this
+"""
+
 from checking import *
 from errors import * 
-# from main import Type
 
 assert(validIntegerAssignment("1+2 + 3 -4 /~5", {}) == True)
 assert(validIntegerAssignment("1+2 + 3 -4 /~", {}) == False)

@@ -1,0 +1,15 @@
+
+$ this is invalid because a is not an boolean expression
+var_int a -> 1
+if a do
+    out<"he">
+end
+
+$ this is invalid because the if syntax is wrong
+if TRUE then
+    out<a>
+end
+
+$ this is invalid because you forget to end after an if
+if TRUE do
+    out<"ha">

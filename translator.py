@@ -9,6 +9,16 @@
     which will generate a python file, which you can run by 
 
         python <output_python_file>
+
+    The command line arguments support valid syntax for variable assignment,
+    so if you want to pass in variable, do it like this
+    
+        python translator.py <input_file> <variable_assignment> <variable_assignment> ...
+
+    where <variable_assignment> must be valid variable assignments inside "" like. 
+
+    Example:    python main.py trial "var_int a -> 6" "var_int b -> 10" "var_int m -> 1950" > result.py
+
 """
 
 import sys
@@ -57,6 +67,8 @@ def assignVariableInteger(line, nameSpace, tabCount, constant=False):
     
     #check if var is not assigned constant before
     var = firstPart[1].strip()
+    if not validVariable(var):
+        raise MTLSyntaxError(line, f"{var} is not a valid variable")
     varType = nameSpace.get(var, "None")
     if varType in ["constantInt", "constantReal", "constantString"] :
         raise MTLRuntimeError(f"{var} is constant, cannot reassign")
@@ -95,7 +107,9 @@ def assignVariableReal(line, nameSpace, tabCount, constant=False):
     if not validRealAssignment(assignment, nameSpace, printToErr = True):
         raise MTLSyntaxError(assignment, "assignment value is not real number")
     var = firstPart[1].strip()
-    
+    if not validVariable(var):
+        raise MTLSyntaxError(line, f"{var} is not a valid variable")
+
     # make sure the variable is constant
     varType = nameSpace.get(var, "None")
     if varType in ["constantInt", "constantReal", "constantString"]  :
@@ -130,7 +144,9 @@ def assignVariableString(line, nameSpace, tabCount, constant=False):
     if not validStringAssignment(assignment, nameSpace, printToErr = True):
         raise MTLSyntaxError(assignment, "assignment value is not String")
     var = firstPart[1].strip()
-    
+    if not validVariable(var):
+        raise MTLSyntaxError(line, f"{var} is not a valid variable")
+
     #check if variable is already assigned constant
     varType = nameSpace.get(var, "None")
     if varType in ["constantInt", "constantReal", "constantString"] :
@@ -159,7 +175,7 @@ def assignVariableBool(line, nameSpace, tabCount):
     firstPart = lineSplit[0].split()
     if len(firstPart) != 2:
         raise MTLSyntaxError(line, "wrong assignment syntax")
-    
+
     #check if assignment is valid
     assignment = lineSplit[1].strip()
     if not validBooleanAssignment(assignment, nameSpace, printToErr = True):
@@ -167,6 +183,10 @@ def assignVariableBool(line, nameSpace, tabCount):
     
     #check if varible is already assigned to constant
     var = firstPart[1].strip()
+
+    if not validVariable(var):
+        raise MTLSyntaxError(line, f"{var} is not a valid variable")
+
     varType = nameSpace.get(var, "None")
     if varType in ["constantInt", "constantReal", "constantString"] :
         raise MTLRuntimeError(f"{var} is constant, cannot reassign")
@@ -302,6 +322,9 @@ def readFile(file, nameSpace):
             handlePrint(line, len(indentStack))
         else:
             raise MTLSyntaxError(line, "Cannot determine what this does")
+    
+    if indentStack:
+        raise MTLSyntaxError("", "forgot to add end to an if or while block")
 
 if __name__ == "__main__":
     main()
