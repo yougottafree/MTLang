@@ -1,0 +1,9 @@
+$ this will do the if else statement
+
+var_bool thisFunny -> TRUE
+
+if thisFunny == TRUE do
+    out<":)">
+else do
+    out<"hahahahaha">
+end

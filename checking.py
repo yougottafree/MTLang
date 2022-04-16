@@ -126,6 +126,8 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
 def validBoolean(boolExpress, nameSpace, printToErr=False):
     if boolExpress == "TRUE" or boolExpress == "FALSE":
         return True
+    if boolExpress in nameSpace and nameSpace[boolExpress] == "bool":
+        return True
     # the rest should be operation between 2 elements
     if "==" in boolExpress:
         equal = True
@@ -143,6 +145,10 @@ def validBoolean(boolExpress, nameSpace, printToErr=False):
         return True
     if validStringAssignment(var1, nameSpace) and validStringAssignment(var2, nameSpace):
         return equal
+    if var1 in ["TRUE", "FALSE"]:
+        return validBoolean(var2, nameSpace)
+    if var2 in ["TRUE", "FALSE"]:
+        return validBoolean(var1, nameSpace)
     if not validVariable(var1):
         if printToErr:
             print_error(f"{var1} is not a valid variable")

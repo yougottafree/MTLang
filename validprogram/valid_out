@@ -1,0 +1,4 @@
+$ this is the example of printing using out
+
+var_int x -> 0
+out<x>
