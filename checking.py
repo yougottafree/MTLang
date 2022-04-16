@@ -108,7 +108,7 @@ def validBoolean(boolExpress, nameSpace, printToErr=False):
     # the rest should be operation between 2 elements
     if "==" in boolExpress:
         equal = True
-    normalizeEqual = boolExpress.replace("<=", "==").replace(">=", "==").replace("<", "==").replace(">", "==")
+    normalizeEqual = boolExpress.replace("!=", "==").replace("<=", "==").replace(">=", "==").replace("<", "==").replace(">", "==")
     split = normalizeEqual.split("==")
     if len(split) != 2:
         if printToErr:
