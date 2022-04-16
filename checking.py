@@ -54,7 +54,7 @@ def validStringAssignment(rightSide, nameSpace, printToErr=False):
 def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
     if validInteger(rightSide):
         return True
-    normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").replace(")", "")
+    normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", " ").replace(")", " ")
     allElement = normalizeOp.split("+")
     for element in allElement:
         element = element.strip()
@@ -63,6 +63,7 @@ def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
         elif not validVariable(element):
             if printToErr:
                 print_error(f"{element} is not a valid variable")
+            return False
         elif element not in nameSpace:
             if printToErr:
                 print_error(f"{element} not initialized")
@@ -81,6 +82,8 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
     for element in allElement:
         element = element.strip()
         if validInteger(element):
+            continue
+        if validReal(element):
             continue
         elif not validVariable(element):
             if printToErr:
@@ -104,9 +107,11 @@ def validBoolean(boolExpress, nameSpace, printToErr=False):
     if "==" in boolExpress:
         equal = True
     normalizeEqual = boolExpress.replace("<=", "==").replace(">=", "==").replace("<", "==").replace(">", "==")
-    split = boolExpress.split("==")
+    split = normalizeEqual.split("==")
     if len(split) != 2:
-        print_error(f"{boolExpress} is not a valid boolean expression")
+        if printToErr:
+            print_error(f"{boolExpress} is not a valid boolean expression")
+        return False
     var1 = split[0].strip()
     var2 = split[1].strip()
     if var1 in ["TRUE", "FALSE"] and var2 in ["TRUE", "FALSE"]:
@@ -141,11 +146,11 @@ def stripNot(element):
         i += 1
     return element[i:]
 
-def validBooleanAssignment(expression, printToErr=False):
-    if validBoolean(expression):
+def validBooleanAssignment(expression, nameSpace, printToErr=False):
+    if validBoolean(expression, nameSpace):
         return True
-    normalizeOp = boolExpress.replace("|", "&")
-    allElement = boolExpress.split("&")
+    normalizeOp = expression.replace("|", "&")
+    allElement = normalizeOp.split("&")
     for element in allElement:
         element = element.strip()
         newElement = stripNot(element)
@@ -169,4 +174,7 @@ def validBooleanAssignment(expression, printToErr=False):
                 print_error(f"{element} is not real number")
             return False
     return True
+    
+
+#TODO: verify the parentheses
     
