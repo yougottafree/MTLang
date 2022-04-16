@@ -1,4 +1,7 @@
-$ this is the example of printing using out
+$ this is the example of printing using out, does not go to new line automatically
 
 var_int x -> 0
 out<x>
+
+$ if you want to print to the newline, use "\n"
+out<"\n">

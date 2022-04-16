@@ -1,14 +1,9 @@
-$ this will do the while loop
+$ this will do the if else statement
 
-var_int i -> 0
-while i < 3 do
-    var_int y -> 0
-    while y < 3 do
-        out<y>
-        var_int y -> y + 1
+    var_bool thisFunny -> TRUE
+    
+    if thisFunny == TRUE do
+        out<":)">
+    else do
+        out<"hahahahaha">
     end
-    var_int i -> i + 1
-end
-
-$ this will go to the newline
-out<"\n">
