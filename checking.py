@@ -1,11 +1,24 @@
 from errors import * 
-# from main import Type
 
-def validString(str):
-    if str[0] != "\"" or str[-1] != "\"":
+def validParentheses(line):
+    open = 0
+    for i in range(len(line)):
+        if line[i] == "(":
+            open.append(i)
+        if line[i] == ")":
+            if open==0:
+                return False
+            open-=1
+    return open == 0
+    
+
+def validString(string):
+    if len(string) < 2:
         return False
-    for i in range(1, len(str)-1):
-        if str[i] == "\"":
+    if string[0] != "\"" or string[-1] != "\"":
+        return False
+    for i in range(1, len(string)-1):
+        if string[i] == "\"":
             return False
     return True
 
@@ -52,6 +65,10 @@ def validStringAssignment(rightSide, nameSpace, printToErr=False):
     return True
         
 def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
+    if not validParentheses(rightSide):
+        if printToErr:
+            print_error(f"{rightSide} has unvalid parentheses")
+        return False
     if validInteger(rightSide):
         return True
     normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", " ").replace(")", " ")
@@ -75,6 +92,10 @@ def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
     return True
 
 def validRealAssignment(rightSide, nameSpace, printToErr=False):
+    if not validParentheses(rightSide):
+        if printToErr:
+            print_error(f"{rightSide} has unvalid parentheses")
+        return False
     if validInteger(rightSide):
         return True
     if validReal(rightSide):
@@ -149,6 +170,10 @@ def stripNot(element):
     return element[i:]
 
 def validBooleanAssignment(expression, nameSpace, printToErr=False):
+    if not validParentheses(expression):
+        if printToErr:
+            print_error(f"{expression} has unvalid parentheses")
+        return False
     if validBoolean(expression, nameSpace):
         return True
     normalizeOp = expression.replace("|", "&")
@@ -178,5 +203,4 @@ def validBooleanAssignment(expression, nameSpace, printToErr=False):
     return True
     
 
-#TODO: verify the parentheses
     

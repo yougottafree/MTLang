@@ -191,7 +191,3 @@ def readFile(file):
 
 if __name__ == "__main__":
     main()
-
-#TODO: string " inside
-#TODO: Boolean transform to python
-#TODO: check for valid parentheses
