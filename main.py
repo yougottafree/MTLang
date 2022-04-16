@@ -20,8 +20,7 @@ def main():
     fileLines = file.readlines()
     file.close()
     readFile(fileLines)
-    print(validIntegerAssignment(" 1 + 2 + a", {"a":Type.Real}))
-
+    
 def handleAssignment(line, tabCount):
     lineSplited = line.split("->", 1)
     

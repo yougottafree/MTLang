@@ -34,21 +34,24 @@ def validVariable(var):
             return False
     return True
 
-def validStringAssignment(rightSide, nameSpace):
+def validStringAssignment(rightSide, nameSpace, printToErr=False):
     if validString(rightSide):
         return True
     if not validVariable(rightSide):
-        raise MTLSyntaxError(rightSide, "is not a valid variable")
+        if printToErr:
+            print_error(f"{rightSide} is not a valid variable")
         return False
     if rightSide not in nameSpace:
-        raise MTLVariableNotInitialized(rightSide)
+        if printToErr:
+            print_error(f"{rightSide} not initialized")
         return False
     if nameSpace[rightSide] != Type.String or nameSpace[rightSide] != Type.ConstantString:
-        raise MTLSyntaxError(rightSide, "is not String")
+        if printToErr:
+            print_error(f"{rightSide} is not String")
         return False
     return True
         
-def validIntegerAssignment(rightSide, nameSpace):
+def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
     if validInteger(rightSide):
         return True
     normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").replace(")", "")
@@ -58,16 +61,19 @@ def validIntegerAssignment(rightSide, nameSpace):
         if validInteger(element):
             continue
         elif not validVariable(element):
-            raise MTLSyntaxError(element, "is not a valid variable")
+            if printToErr:
+                print_error(f"{element} is not a valid variable")
         elif element not in nameSpace:
-            raise MTLVariableNotInitialized(element)
+            if printToErr:
+                print_error(f"{element} not initialized")
             return False
         elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger:
-            raise MTLSyntaxError(element, "is not an integer")
+            if printToErr:
+                print_error(f"{element} is not integer")
             return False
     return True
 
-def validRealAssignment(rightSide, nameSpace):
+def validRealAssignment(rightSide, nameSpace, printToErr=False):
     if validInteger(rightSide):
         return True
     normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").replace(")", "")
@@ -77,12 +83,58 @@ def validRealAssignment(rightSide, nameSpace):
         if validInteger(element):
             continue
         elif not validVariable(element):
-            raise MTLSyntaxError(element, "is not a valid variable")
+            if printToErr:
+                print_error(f"{element} is not a valid variable")
+            return False
         elif element not in nameSpace:
-            raise MTLVariableNotInitialized(element)
+            if printToErr:    
+                print_error(f"{element} not initialized")
             return False
         elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger \
         and nameSpace[element] != Type.Real and nameSpace[element] != Type.ConstantReal:
-            raise MTLSyntaxError(element, "is not a real number")
+            if printToErr:
+                print_error(f"{element} is not real number")
             return False
     return True
+
+def validBoolean(boolExpress, nameSpace):
+    if boolExpress == "TRUE" or boolExpress == "FALSE":
+        return True
+    # the rest should be operation between 2 elements
+    if "==" in boolExpress:
+        equal = True
+    normalizeEqual = boolExpress.replace("<=", "==").replace(">=", "==").replace("<", "==").replace(">", "==")
+    split = boolExpress.split("==")
+    if len(split) != 2:
+        print_error(f"{boolExpress} is not a valid boolean expression")
+    var1 = split[0].strip()
+    var2 = split[1].strip()
+    if var1 in ["TRUE", "FALSE"] and var2 in ["TRUE", "FALSE"]:
+        return True
+    if validRealAssignment(var1, nameSpace) and validRealAssignment(var2, nameSpace):
+        return True
+    if validStringAssignment(var1, nameSpace) and validStringAssignment(var2, nameSpace):
+        return equal
+    if not validVariable(var1):
+        if printToErr:
+            print_error(f"{var1} is not a valid variable")
+        return False
+    if not validVariable(var2):
+        if printToErr:
+            print_error(f"{var2} is not a valid variable")
+        return False
+    if var1 not in nameSpace:
+        if printToErr:
+            print_error(f"{var1} not initialized")
+        return False
+    if var2 not in nameSpace:
+        if printToErr:
+            print_error(f"{var2} not initialized")
+        return False
+    if nameSpace[var1] == Type.Boolean and nameSpace[var2] == Type.Boolean:
+        return True
+    return False
+        
+def validBooleanExpression(expression, nameSpace):
+    if validBoolean(expression):
+        return True

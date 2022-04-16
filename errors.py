@@ -1,3 +1,9 @@
+import sys
+
+def print_error(message):
+    print(message, file=sys.stderr)
+
+
 class MTLSyntaxError(Exception):
     def __init__(self, line, message="SYNTAX ERROR"):
         self.line = line
