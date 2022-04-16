@@ -1,7 +1,16 @@
+"""
+    Author: Tam Duong & Linh Ta (Group 21)
+    This file will define the errors and the printing of error
+    to stderr
+"""
+
 import sys
 
 def print_error(message):
-    print(message, file=sys.stderr)
+    """
+        this function will print the message to the stderr
+    """
+    print(f"ERROR: {message}", file=sys.stderr)
 
 
 class MTLSyntaxError(Exception):

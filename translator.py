@@ -4,7 +4,7 @@
     This project will implement MTLang, which is a language we have created
     to run the program run the command
     
-        python main.py <input_file> > <output_python_file>
+        python translator.py <input_file> > <output_python_file>
 
     which will generate a python file, which you can run by 
 
