@@ -13,4 +13,6 @@ assert(validIntegerAssignment("a+b1 * c2 ^d", {"a":Type.Integer}) == False)
 
 assert(validBoolean("TRUE") == True)
 assert(validBoolean("FALSE") == True)
-assert(validBoolean())
+assert(validBoolean("1 < 3") == True)
+assert(validBoolean("1 >= 4") == True)
+assert(validBooleanAssignment("1 > 3 & 4 < 1"), True)

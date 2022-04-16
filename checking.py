@@ -97,7 +97,7 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
             return False
     return True
 
-def validBoolean(boolExpress, nameSpace):
+def validBoolean(boolExpress, nameSpace, printToErr=False):
     if boolExpress == "TRUE" or boolExpress == "FALSE":
         return True
     # the rest should be operation between 2 elements
@@ -135,6 +135,38 @@ def validBoolean(boolExpress, nameSpace):
         return True
     return False
         
-def validBooleanExpression(expression, nameSpace):
+def stripNot(element):
+    i = 0
+    while i < len(element) and element[i] == "!":
+        i += 1
+    return element[i:]
+
+def validBooleanAssignment(expression, printToErr=False):
     if validBoolean(expression):
         return True
+    normalizeOp = boolExpress.replace("|", "&")
+    allElement = boolExpress.split("&")
+    for element in allElement:
+        element = element.strip()
+        newElement = stripNot(element)
+        if not newElement:
+            if printToErr:
+                print_error(f"{element} is not a valid boolean")
+            return False
+        element = newElement
+        if validBoolean(element, nameSpace):
+            continue
+        elif not validVariable(element):
+            if printToErr:
+                print_error(f"{element} is not a valid variable")
+            return False
+        elif element not in nameSpace:
+            if printToErr:    
+                print_error(f"{element} not initialized")
+            return False
+        elif nameSpace[element] != Type.Boolean:
+            if printToErr:
+                print_error(f"{element} is not real number")
+            return False
+    return True
+    
