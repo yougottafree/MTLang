@@ -1,5 +1,5 @@
 from errors import * 
-from main import Type
+# from main import Type
 
 def validString(str):
     if str[0] != "\"" or str[-1] != "\"":
@@ -45,7 +45,7 @@ def validStringAssignment(rightSide, nameSpace, printToErr=False):
         if printToErr:
             print_error(f"{rightSide} not initialized")
         return False
-    if nameSpace[rightSide] != Type.String or nameSpace[rightSide] != Type.ConstantString:
+    if nameSpace[rightSide] != "string" or nameSpace[rightSide] != "constantString":
         if printToErr:
             print_error(f"{rightSide} is not String")
         return False
@@ -68,7 +68,7 @@ def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
             if printToErr:
                 print_error(f"{element} not initialized")
             return False
-        elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger:
+        elif nameSpace[element] != "int" and nameSpace[element] != "constantInt":
             if printToErr:
                 print_error(f"{element} is not integer")
             return False
@@ -76,6 +76,8 @@ def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
 
 def validRealAssignment(rightSide, nameSpace, printToErr=False):
     if validInteger(rightSide):
+        return True
+    if validReal(rightSide):
         return True
     normalizeOp = rightSide.replace("-", "+").replace("*", "+").replace("/", "+").replace("%", "+").replace("^", "+").replace("(", "").replace(")", "")
     allElement = normalizeOp.split("+")
@@ -93,8 +95,8 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
             if printToErr:    
                 print_error(f"{element} not initialized")
             return False
-        elif nameSpace[element] != Type.Integer and nameSpace[element] != Type.ConstantInteger \
-        and nameSpace[element] != Type.Real and nameSpace[element] != Type.ConstantReal:
+        elif nameSpace[element] != "int" and nameSpace[element] != "constantInt" \
+        and nameSpace[element] != "real" and nameSpace[element] != "constantReal":
             if printToErr:
                 print_error(f"{element} is not real number")
             return False
@@ -136,7 +138,7 @@ def validBoolean(boolExpress, nameSpace, printToErr=False):
         if printToErr:
             print_error(f"{var2} not initialized")
         return False
-    if nameSpace[var1] == Type.Boolean and nameSpace[var2] == Type.Boolean:
+    if nameSpace[var1] == "bool" and nameSpace[var2] == "bool":
         return True
     return False
         
@@ -169,7 +171,7 @@ def validBooleanAssignment(expression, nameSpace, printToErr=False):
             if printToErr:    
                 print_error(f"{element} not initialized")
             return False
-        elif nameSpace[element] != Type.Boolean:
+        elif nameSpace[element] != "bool":
             if printToErr:
                 print_error(f"{element} is not real number")
             return False

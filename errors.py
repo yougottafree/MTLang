@@ -14,3 +14,8 @@ class MTLVariableNotInitialized(Exception):
     def __init__(self, variable):
         self.message = f"{variable} not initialized"
         super().__init__(self.message)
+
+class MTLRuntimeError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
