@@ -87,6 +87,7 @@ def validStringAssignment(rightSide, nameSpace, printToErr=False):
         @param nameSpace:       the namespace that contains all variable type
         @param printToErr:      Whether or not to print error to stderr
     """
+    rightSide = rightSide.strip()
     if validString(rightSide):
         return True
     if not validVariable(rightSide):
@@ -97,7 +98,7 @@ def validStringAssignment(rightSide, nameSpace, printToErr=False):
         if printToErr:
             print_error(f"{rightSide} not initialized")
         return False
-    if nameSpace[rightSide] != "string" or nameSpace[rightSide] != "constantString":
+    if nameSpace[rightSide] != "string" and nameSpace[rightSide] != "constantString":
         if printToErr:
             print_error(f"{rightSide} is not String")
         return False
@@ -111,7 +112,7 @@ def validIntegerAssignment(rightSide, nameSpace, printToErr=False):
         @param nameSpace:       the namespace that contains all variable type
         @param printToErr:      Whether or not to print error to stderr
     """
-    
+    rightSide = rightSide.strip()
     # check for valid parentheses
     if not validParentheses(rightSide):
         if printToErr:
@@ -157,6 +158,7 @@ def validRealAssignment(rightSide, nameSpace, printToErr=False):
         @param nameSpace:       the namespace that contains all variable type
         @param printToErr:      Whether or not to print error to stderr
     """
+    rightSide = rightSide.strip()
     #check if parentheses are valid
     if not validParentheses(rightSide):
         if printToErr:

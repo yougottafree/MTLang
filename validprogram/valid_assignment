@@ -1,0 +1,22 @@
+$ assign integer can be use with both integer and variable that has been assigned to int
+var_int a -> 1
+var_int b -> a
+var_int a -> a + 1
+
+$ assign real can be used with both integer and real and variable
+var_real c -> 3
+var_real d -> 4.0
+var_real e -> a
+var_real f -> d
+
+$ assign str can be used with string and variable that represent string
+var_str g -> "hahaha"
+var_str h -> g
+
+$ assign boolean can be used with all boolean expression
+var_bool a -> TRUE
+var_bool b -> FALSE
+var_bool c -> a & b
+var_bool d -> c | a | b
+var_bool e -> e < 10
+var_bool z -> e & 4 < 10

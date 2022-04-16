@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "args": ["trial", "var_int a -> 3", "var_int b -> 4", "var_int m -> 100"], 
+            "args": ["validprogram/valid_assignment", "var_int a -> 3", "var_int b -> 4", "var_int m -> 100"], 
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true

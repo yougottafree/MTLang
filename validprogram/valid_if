@@ -7,3 +7,40 @@ if thisFunny == TRUE do
 else do
     out<"hahahahaha">
 end
+
+$ all type of condition can be fine
+var_int i ->  1
+if i < 100 do
+    out<"i is less than 100\n">
+else do
+    out<"i is more than 100\n">
+end
+
+$ arithmetic to bool
+var_int a -> 1
+var_int b -> 2
+var_int c -> 3
+var_real d -> 4.0
+
+if a + b < c + d do
+    out<"a + b < c + d\n">
+else do
+    out<"you wrong">
+end
+
+$ logical operation
+
+var_bool pretty -> TRUE
+var_bool fun    -> TRUE
+
+if pretty & fun do
+    out<"how's you doing?">
+end
+
+if pretty | fun do
+    out<"Let's hangout">
+end
+
+if !pretty & !fun do
+    out<"I am busy, see you">
+end

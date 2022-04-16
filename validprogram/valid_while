@@ -12,3 +12,19 @@ end
 
 $ this will go to the newline
 out<"\n">
+
+$ you can do variable assignment
+var_real salary -> 100000
+while salary < 200000 do
+    out<"grinding Leetcode">
+    var_real salary -> salary * 1.5
+end 
+
+$ you can do logical operation
+var_bool inCS -> TRUE
+var_bool haveAWife -> TRUE
+
+$ this is infinite loop
+while inCS & !haveAWife do
+    out<"you will die alone\n">
+end
